@@ -1,14 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  // eslint-disable-next-line max-len
-  DATABASE_NAME, DATABASE_PASSWORD, DATABASE_PORT, DATABASE_USERNAME, DATABASE_HOST, DATABASE_DIALECT,
-} = require('../config/db-config');
+  DATABASE_NAME, DATABASE_PASSWORD, DATABASE_PORT, DATABASE_USERNAME, DATABASE_DIALECT,
+} = require('../config/env');
 
 // eslint-disable-next-line max-len
-const sequelize = new Sequelize(DATABASE_NAME, DATABASE_PORT, DATABASE_PASSWORD, DATABASE_USERNAME, {
-  host: DATABASE_HOST,
+const sequelize = new Sequelize(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD, {
+  host: 'localhost',
   dialect: DATABASE_DIALECT,
-
+  port: DATABASE_PORT,
 });
 
 const db = {};

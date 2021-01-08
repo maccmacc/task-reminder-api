@@ -3,7 +3,7 @@ require('dotenv').config();
 const APP_PORT = +process.env.PORT || 3000;
 const SERVICE_NAME = process.env.SERVICE_NAME || 'TaskReminderService';
 const {
-  DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT,
+  DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT, DATABASE_DIALECT,
 } = process.env;
 
 module.exports = {
@@ -13,4 +13,5 @@ module.exports = {
   DATABASE_USERNAME,
   DATABASE_NAME,
   DATABASE_PORT,
+  DATABASE_DIALECT,
 };
