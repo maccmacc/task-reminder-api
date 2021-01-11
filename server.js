@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const { APP_PORT, SERVICE_NAME } = require('./src/config/env');
 const usersRoute = require('./src/routes/users.routes');
+const postsRoute = require('./src/routes/posts.routes');
 
 const db = require('./src/entities/index');
 
@@ -23,6 +24,7 @@ app.get('/', ((req, res) => {
 }));
 
 app.use('/users', usersRoute);
+app.use('/users', postsRoute);
 
 app.listen(APP_PORT, () => {
   console.log(`${SERVICE_NAME} is up!`);
