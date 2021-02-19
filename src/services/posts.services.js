@@ -1,48 +1,57 @@
-const { Post, User } = require('../entities/index');
-const { getUserById } = require('./users.services');
+const { Post } = require('../entities/index');
 
-const { mapPostToPostResponse, mapPostToPostUserResponse } = require('../utils/mappers/post-mapper');
+const getAllPosts = async () => Post.findAll();
 
-const getUserPosts = async (userId, limit = 10, offset = 0) => {
-  const user = await getUserById(userId);
+const getPostById = async (id) => {
+  const post = await Post.findByPk(id);
 
-  try {
-    const posts = await Post.findAll({
-      where: { userId: user.id },
-      limit: +limit,
-      offset: +offset,
-      include: {
-        model: User,
-      },
-    });
-    return posts.map((post) => mapPostToPostUserResponse(post));
-  } catch (error) {
-    console.log(error);
-    throw new Error('Cannot fetch posts for user');
+  if (!post) {
+    throw new Error(`Post with id ${id} is not found`);
   }
+
+  return post;
 };
 
-const createPost = async (postRaw) => {
+const updatePost = async (id, postRaw) => {
   const {
-    title, description, status, userId,
+    title, description,
   } = postRaw;
 
-  const user = await getUserById(userId);
+  const post = await getPostById(id);
+
+  return post.update({
+    ...post,
+    title,
+    description,
+  });
+};
+const createPost = async (postRaw) => {
+  const {
+    title, description, status,
+  } = postRaw;
 
   try {
     const post = await Post.create({
       title,
       description,
       status,
-      userId: user.id,
     });
-    return mapPostToPostResponse(post);
+    return post;
   } catch (error) {
     console.error(error);
     // logger
-    throw new Error('Post failed');
+    throw new Error('Post with this title already exist');
   }
 };
+
+const deletePost = async (id) => {
+  const result = await Post.destroy({ where: { id } });
+  // if => 0 => 0 => false
+  if (!result) {
+    throw new Error('There is no post to delete');
+  }
+};
+
 module.exports = {
-  createPost, getUserPosts,
+  getAllPosts, createPost, deletePost, getPostById, updatePost,
 };

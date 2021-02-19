@@ -2,28 +2,54 @@ const express = require('express');
 
 const router = express.Router();
 const {
-  createPost, getUserPosts,
+  getAllPosts, createPost, deletePost, getPostById, updatePost,
 } = require('../services/posts.services');
 
-const { mapCreatePostRequest } = require('../utils/mappers/post-mapper');
-
-router.get('/:id/posts', ((req, res) => {
-  const { id } = req.params;
-  const { offset, limit } = req.query;
-  getUserPosts(id, limit, offset).then((posts) => {
+router.get('', ((req, res) => {
+  getAllPosts().then((posts) => {
     res.send(posts);
+    console.log(posts);
   }).catch((err) => {
-    console.error(`Something went wrong ${err}`);
+    console.error(`Something went wrong${err}`);
   });
 }));
 
-router.post('/:id/posts', ((req, res) => {
+router.put('/:id', ((req, res) => {
   const { id } = req.params;
-  const createPostRequest = mapCreatePostRequest(req.body, id);
-  createPost(createPostRequest).then((post) => {
+  const { body } = req;
+  updatePost(id, body).then((post) => {
     res.send(post);
   }).catch((err) => {
     res.send(err.message).status(400);
+  });
+}));
+
+router.get('/:id', ((req, res) => {
+  const { id } = req.params;
+  getPostById(id).then((post) => {
+    res.send(post);
+  }).catch((err) => {
+    console.error(err);
+    res.send(err.message).status(404);
+  });
+}));
+
+router.post('', ((req, res) => {
+  createPost(req.body).then((post) => {
+    res.send(post);
+    console.log(post);
+  }).catch((err) => {
+    res.send(err.message).status(400);
+  });
+}));
+
+router.delete('/:id', ((req, res) => {
+  const { id } = req.params;
+
+  deletePost(id).then(() => {
+    res.send(204);
+  }).catch((err) => {
+    res.send(err.message).status(404);
   });
 }));
 

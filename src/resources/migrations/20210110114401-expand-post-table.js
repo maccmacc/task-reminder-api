@@ -1,18 +1,21 @@
 module.exports = {
-  up: async (queryInterface, Sequelize) => Promise.all([queryInterface.addColumn(
+  up: async (queryInterface, Sequelize) => queryInterface.addColumn('Posts', 'userId', {
+    type: Sequelize.INTEGER,
+  }).then(() => queryInterface.addConstraint(
     'Posts',
-    'userId',
     {
-      type: Sequelize.INTEGER,
+      fields: ['userId'],
+      type: 'foreign key',
+      name: 'fk_user',
       references: {
-        model: 'users',
-        key: 'id',
-        as: 'userId',
+        table: 'users',
+        field: 'id',
       },
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
     },
+  )),
 
-  )]),
-
-  down: async (queryInterface) => Promise.all([queryInterface.removeColumn('Posts', 'userId')]),
+  down: async (queryInterface) => Promise.all([queryInterface.removeConstraint('Posts', 'fk_user'), queryInterface.removeColumn('Posts', 'userId')]),
 
 };

@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         // sourceKey: 'userId',
         as: 'posts',
+        onDelete: 'cascade',
+        hooks: true,
       });
     }
   }
